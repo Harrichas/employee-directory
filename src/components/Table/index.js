@@ -9,7 +9,8 @@ class Table extends React.Component {
         this.state = {
             employees: [],
             empList: [],
-            search: ""
+            search: "",
+            sort: true, // true means ASC order, false means DESC order
         }
     }
     componentDidMount(){
@@ -21,35 +22,48 @@ class Table extends React.Component {
             })
         })
     }
+
     handleInputChange = event => {
-        this.setState({ search: event.target.value });
-        console.log(this.state.search);
+        this.setState({ ...this.state, search: event.target.value });
+        console.log(event.target.value);
       };
-    
-    
 
-    //const sortByName = this.state.employees.sort()
+    toggleSort = () => {
+        this.setState({...this.state, sort: !this.state.sort})
+    }
 
-    render() {
-        const sortByName = function(){
-            console.log(this.state);
-            const mapped = this.state.empList.map(function(el, i) {
-            return { index: i, value: el.name.first.toLowerCase() };
-            })
-            
-            mapped.sort(function(a, b) {
-                if (a.value > b.value) {
-                return 1;
-                }
-                if (a.value < b.value) {
-                return -1;
-                }
-                return 0;
-            });
-        }
-
+    sortByName = (a, b) => {
+        // console.log(this.state);
+        // const mapped = this.state.empList.map(function(el, i) {
+        // return { index: i, value: el.name.first.toLowerCase() };
+        // })
         
-        const rows = this.state.employees.map(function(employee){
+        if(this.state.sort) {
+            if (a.name.first > b.name.first) {
+                return 1;
+            }
+            if (a.name.first < b.name.first) {
+                return -1;
+            }
+        } else {
+            if (a.name.first > b.name.first) {
+                return -1;
+            }
+            if (a.name.first < b.name.first) {
+                return 1;
+            }
+        }
+            
+        return 0;
+        // });
+    }
+
+    searchByFirstName = employee => {
+       return employee.name.first.toLowerCase().includes(this.state.search.toLowerCase());
+    }
+    
+    render() {
+        const rows = this.state.employees.sort(this.sortByName).filter(this.searchByFirstName).map(function(employee){
             return (
                 <tr key = {employee.email}>
                     <td>
@@ -70,14 +84,14 @@ class Table extends React.Component {
 
      return( 
     <div>
-        <Search/>
+        <Search handleInputChange={this.handleInputChange}/>
      <table className="table">
           <thead>
               <tr>
                   <td>
                       Picture
                   </td>
-                  <td onClick={sortByName}>
+                  <td onClick={this.toggleSort}>
                     First Name
                   </td>
                   <td>
