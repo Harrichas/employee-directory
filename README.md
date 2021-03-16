@@ -15,9 +15,6 @@ To start this application from the local simply run 'npm start' after running an
 
 ## GitHub Info
 
- https://github.com/Harrichas/employee-directory
-
- ## Heroku Link
-
- https://limitless-badlands-04465.herokuapp.com/
+https://github.com/Harrichas/employee-directory
+https://harrichas.github.io/employee-directory/
 
